@@ -47,11 +47,12 @@ int main(int argc, char* argv[])
         if (isSolvable(test, key)) {
 
             // Iterate through the queue
-            for (int n = 0; n < queue.size();) {
+            for (int n = 0; n < todo.size();n++) {
+                test = *todo[n];
 
                 // check if we have found the key
                 // if not, get the moves test will produce
-                if (*todo[n] != key) {
+                if (test != key) {
                     for (int i = 0; i < 4; i++) {
                         string next;
                         next = queue[test].getNextMove(i);
@@ -69,8 +70,7 @@ int main(int argc, char* argv[])
                 else {
                     break;
                 }
-                n++;
-                test = *todo[n];
+               
             }
 
             // reconstruct the path to the key using the queue data structure
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
                 cout << "Board Solution not found\n" << endl;
             }
 
-            cout << queue.bucket_count() << " boards considered" << endl;
+            cout << queue.size() << " boards considered" << endl;
         }
 
         return 0;
