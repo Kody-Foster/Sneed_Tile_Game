@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
 
             // Iterate through the queue
             for (int n = 0; n < todo.size();n++) {
+
                 test = *todo[n];
 
                 // check if we have found the key
@@ -70,7 +71,7 @@ int main(int argc, char* argv[])
                 else {
                     break;
                 }
-               
+
             }
 
             // reconstruct the path to the key using the queue data structure
@@ -120,14 +121,14 @@ bool isSolvable(string& in, string& key) {
 
     // counts the number of inversions compared to the key
     int numInversions = 0;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) { //for each pivot
 
-        for (int j = i + 1; j < 9; j++) {
-            for (int k = 0; k < 9; k++) {
-                if (in[i] == key[k]) {
+        for (int j = i + 1; j < 9; j++) { //for each item ahead of pivot
+            for (int k = 0; k <= i; k++) { //compare to every value behind pivot including pivot
+                /*if (in[i] == key[k]) {
                     break;
-                }
-                if (in[j] == key[k]) {
+                }*/
+                if (in[j] == key[k]) { //if there are identical values on either side then update the  inversions
                     numInversions++;
                 }
             }
