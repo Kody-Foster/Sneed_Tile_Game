@@ -124,11 +124,16 @@ bool isSolvable(string& in, string& key) {
     for (int i = 0; i < 8; i++) { //for each pivot
 
         for (int j = i + 1; j < 9; j++) { //for each item ahead of pivot
-            for (int k = 0; k <= i; k++) { //compare to every value behind pivot including pivot
-                /*if (in[i] == key[k]) {
+            for (int k = 0; k < 9; k++) { //compare to every value in the key
+
+                // note:
+
+                 // if we reach in[i] first, break;
+                if (in[i] == key[k]) {
                     break;
-                }*/
-                if (in[j] == key[k]) { //if there are identical values on either side then update the  inversions
+                
+                // if we reach in[k] first, its out of order:
+                if (in[j] == key[k]) {
                     numInversions++;
                 }
             }
