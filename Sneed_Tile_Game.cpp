@@ -36,17 +36,17 @@ int main(int argc, char* argv[])
         */
 
         string  test = start;
-        unordered_map <string, board> queue;
+        unordered_map <string, board> done;
         vector <string*> todo;
 
 
-        queue[test] = board{ test };
-        todo.emplace_back(&queue[test].name);
+        done[test] = board{ test };
+        todo.emplace_back(&done[test].name);
 
         // test's if puzzle is solvable first
         if (isSolvable(test, key)) {
 
-            // Iterate through the queue
+            // Iterate through the done
             for (int n = 0; n < todo.size();n++) {
 
                 test = *todo[n];
@@ -56,13 +56,13 @@ int main(int argc, char* argv[])
                 if (test != key) {
                     for (int i = 0; i < 4; i++) {
                         string next;
-                        next = queue[test].getNextMove(i);
+                        next = done[test].getNextMove(i);
                         if (next != "0") {
-                            // if next is not already in queue
-                            if (!queue.count(next)) {
-                                queue[next] = board{ next };
-                                queue[next].setParent(&queue[test]);
-                                todo.emplace_back(&queue[next].name); // add new moves to todo
+                            // if next is not already in done
+                            if (!done.count(next)) {
+                                done[next] = board{ next };
+                                done[next].setParent(&done[test]);
+                                todo.emplace_back(&done[next].name); // add new moves to todo
                             }
 
                         }
@@ -74,16 +74,16 @@ int main(int argc, char* argv[])
 
             }
 
-            // reconstruct the path to the key using the queue data structure
-            // starting at queue[test] follow the chain of parents to the start
-            if ((queue[test].name == key)) {
+            // reconstruct the path to the key using the done data structure
+            // starting at done[test] follow the chain of parents to the start
+            if ((done[test].name == key)) {
                 vector <string*> path;
-                path.emplace_back(&queue[test].name);
+                path.emplace_back(&done[test].name);
 
                 // if test != start add the next parent to the path
-                while (queue[test].getParent() != nullptr && queue[test].name != start) {
-                    test = queue[test].getParent()->name;
-                    path.emplace_back(&queue[test].name);
+                while (done[test].getParent() != nullptr && done[test].name != start) {
+                    test = done[test].getParent()->name;
+                    path.emplace_back(&done[test].name);
                 }
 
                 // print the board and keep track of how many boards were printed
@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
                 for (int i = path.size() - 1; i >= 0; i--) {
                     cout << "Move " << movecount << ":\n";
                     movecount++;
-                    queue[*path[i]].printBoard();
+                    done[*path[i]].printBoard();
                 }
                 cout << path.size() << " moves is the shortest path to victory" << endl;
             }
@@ -99,12 +99,13 @@ int main(int argc, char* argv[])
                 cout << "Board Solution not found\n" << endl;
             }
 
-            cout << queue.size() << " boards considered" << endl;
+            cout << done.size() << " boards considered" << endl;
         }
 
         return 0;
     }
 }
+
 // tests for duplicates, counts number of inversions compared to key
 // returns 1 if solvable, 0 if not solvable or duplicate numbers exist
 bool isSolvable(string& in, string& key) {
@@ -131,24 +132,25 @@ bool isSolvable(string& in, string& key) {
                  // if we reach in[i] first, break;
                 if (in[i] == key[k]) {
                     break;
-                
-                // if we reach in[k] first, its out of order:
-                if (in[j] == key[k]) {
-                    numInversions++;
+
+                    // if we reach in[k] first, its out of order:
+                    if (in[j] == key[k]) {
+                        numInversions++;
+                    }
                 }
             }
         }
-    }
-    if ((numInversions % 2) >= 1) {
-        cout << "Not Solvable" << endl;
-        return 0;
-    }
-    else if ((numInversions % 2) == 0) {
-        cout << "Solvable" << endl;
-        return 1;
-    }
-    else {
-        cout << "No valid input" << endl;
-        return 0;
+        if ((numInversions % 2) >= 1) {
+            cout << "Not Solvable" << endl;
+            return 0;
+        }
+        else if ((numInversions % 2) == 0) {
+            cout << "Solvable" << endl;
+            return 1;
+        }
+        else {
+            cout << "No valid input" << endl;
+            return 0;
+        }
     }
 }
